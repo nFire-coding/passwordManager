@@ -1,13 +1,30 @@
-# passwordManager
-A simple password manager able to store your passwords
+# Simple Password Manager
 
-Instructions:
--Install Python from the official website (latest version) give access to Path and environment variables.
--Launch the command pip install cryptography on the terminal in order install the only dependency.
--Open a powershell window in the script folder and launch it with python Cifra.py
+A simple password manager capable of securely storing your passwords.
 
-NB: Be careful about having the program generate more than one secret key. By default it is generated
-in the current folder so if you leave your old key in the current folder
-and have it generate a second one it will be overwritten.
-The program is made for educational use only and can be improved by everyone freely
-(for example, there is no functionality to change passwords already saved).
+## Instructions
+
+### Prerequisites
+- Install Python from the [official website](https://www.python.org/) (latest version) and ensure it is added to the system Path and environment variables.
+
+### Installation
+1. Open a terminal or command prompt.
+2. Launch the following command to install the required dependency:
+    ```
+    pip install cryptography
+    ```
+
+### Usage
+1. Navigate to the script folder in the terminal or powershell/command prompt.
+2. Launch the script with Python by executing:
+    ```
+    python Cifra.py
+    ```
+
+## Notes
+- **Caution**: Avoid generating more than one secret key. By default, it is generated in the current folder. If you generate a new key without removing the old one, it will be overwritten.
+- This program is intended for educational use only.
+- Feel free to contribute and improve the program. For example, there is currently no functionality to change passwords already saved.
+
+## Compatibility
+- This program is compatible with Windows, macOS, and GNU/Linux operating systems.
