@@ -8,7 +8,7 @@ A simple password manager capable of securely storing your passwords.
 - Install Python from the [official website](https://www.python.org/) (latest version) and ensure it is added to the system Path and environment variables.
 
 ### Installation
-1. Open a terminal or command prompt.
+1. Open a terminal or powershell/command prompt.
 2. Launch the following command to install the required dependency:
     ```
     pip install cryptography
