@@ -24,7 +24,7 @@ A simple password manager capable of securely storing your passwords.
 ## Notes
 - **Caution**: Avoid generating more than one secret key. By default, it is generated in the current folder. If you generate a new key without removing the old one, it will be overwritten.
 - This program is intended for educational use only.
-- Feel free to contribute and improve the program. For example, there is currently no functionality to change passwords already saved.
+- Feel free to contribute and improve the program.
 
 ## Compatibility
 - This program is compatible with Windows, macOS, and GNU/Linux operating systems.
