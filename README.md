@@ -1,9 +1,9 @@
 # passwordManager
-(Italian)[/tree/master/ReadMe/IT.md]
+[Italian](/tree/master/ReadMe/IT.md)
 A simple password manager able to store your passwords
 
 Instructions: 
--Install Python from the (official website)[https://www.python.org/downloads/] (latest version) give access to Path and environment variables. 
+-Install Python from the [official website](https://www.python.org/downloads/) (latest version) give access to Path and environment variables. 
 -Launch the command ```pip install cryptography``` on the terminal in order install the only dependency. 
 -Open a powershell window in the script folder and launch it with ```python Cifra.py```.
 
