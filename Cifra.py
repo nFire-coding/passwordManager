@@ -1,7 +1,9 @@
 import os
 import pickle
-from cryptography.fernet import Fernet
 import easygui
+import base64
+import hashlib
+from cryptography.fernet import Fernet
 from pathlib import Path
 from typing import List, Tuple
 
@@ -9,29 +11,38 @@ class PasswordManager:
     def __init__(self):
         self.key_file = Path("secret.key")
         self.password_file = Path("passwords.dat")
+        self.salt_file = Path("salt.dat")
+        self.backend = hashlib.sha256()
 
-    def generate_key(self):
-        """Generate a new key and save it to a file."""
-        key = Fernet.generate_key()
+    def generate_salt(self) -> bytes:
+        """Generate a random salt."""
+        return os.urandom(16)
+
+    def generate_key(self, master_password: str):
+        """Generate a new key using a master password."""
+        salt = self.generate_salt()
+        key = hashlib.pbkdf2_hmac('sha256', master_password.encode(), salt, 100000)
         with self.key_file.open("wb") as key_file:
             key_file.write(key)
+        with self.salt_file.open("wb") as salt_file:
+            salt_file.write(salt)
 
-    def load_key(self) -> bytes:
-        """Load the key from a file."""
-        file_path = easygui.fileopenbox(title="Seleziona il file chiave segreta")
-        with open(file_path, "rb") as key_file:
-            key = key_file.read()
+    def load_key(self, master_password: str) -> bytes:
+        """Load the key using a master password."""
+        with self.salt_file.open("rb") as salt_file:
+            salt = salt_file.read()
+        key = hashlib.pbkdf2_hmac('sha256', master_password.encode(), salt, 100000)
         return key
 
     def encrypt_password(self, password: str, key: bytes) -> bytes:
         """Encrypt a password."""
-        fernet = Fernet(key)
+        fernet = Fernet(base64.urlsafe_b64encode(key))
         encrypted_password = fernet.encrypt(password.encode())
         return encrypted_password
 
     def decrypt_password(self, encrypted_password: bytes, key: bytes) -> str:
         """Decrypt a password."""
-        fernet = Fernet(key)
+        fernet = Fernet(base64.urlsafe_b64encode(key))
         decrypted_password = fernet.decrypt(encrypted_password).decode()
         return decrypted_password
 
@@ -82,13 +93,14 @@ class PasswordManager:
 
     def main(self):
         """Main function."""
+        master_password = input("Inserisci la password master: ").strip()
         choice = input("Hai già una chiave segreta? (SI/NO): ").strip().upper()
         if choice == "SI":
-            key = self.load_key()
+            key = self.load_key(master_password)
         elif choice == "NO":
             print("Generata nella cartella corrente la tua chiave segreta (secret.key). NASCONDILA E CONSERVALA, serve a recuperare le tue password!")
-            self.generate_key()
-            key = self.load_key()
+            self.generate_key(master_password)
+            key = self.load_key(master_password)
         else:
             return
 
@@ -116,4 +128,3 @@ class PasswordManager:
 
 if __name__ == "__main__":
     PasswordManager().main()
-

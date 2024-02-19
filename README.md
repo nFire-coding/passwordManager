@@ -11,9 +11,9 @@ A simple password manager capable of securely storing your passwords. 🗝️
 
 ### 📥 Installation
 1. Open a terminal or powershell/command prompt. 🖥️
-2. Launch the following command to install the required dependency:
+2. Launch the following command to install the required dependencies:
     ```
-    pip install cryptography
+    pip install -r requirements.txt
     ```
 
 ### 🚀 Usage
