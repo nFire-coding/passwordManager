@@ -1,0 +1,4 @@
+easygui
+PyInquirer
+colorama
+cryptography

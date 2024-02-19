@@ -7,7 +7,7 @@ Instructions:
 
 -Install Python from the [official website](https://www.python.org/downloads/) (latest version) give access to Path and environment variables. 
 
--Launch the command ```pip install cryptography``` on the terminal in order install the only dependency. 
+-Launch the command ``pip install -r requirements.txt`` on the terminal in the program folder to install the necessary libraries.
 
 -Open a powershell window in the script folder and launch it with ```python Cifra.py```.
 
