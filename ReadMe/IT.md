@@ -1,7 +1,8 @@
 # passwordManager
 Un semplice gestore di password in grado di memorizzare le vostre password
 
-Istruzioni: 
+Istruzioni:
+
 -Installare Python dal [sito ufficiale](https://www.python.org/downloads/) (ultima versione) e dare accesso al percorso e alle variabili d'ambiente.
 
 -Lanciare il comando ```pip install cryptography``` sul terminale per installare l'unica dipendenza.
