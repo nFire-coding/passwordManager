@@ -1,5 +1,5 @@
 # passwordManager
-[Italian](/blob/main/ReadMe/IT.md)
+[Italian](/ReadMe/IT.md)
 A simple password manager able to store your passwords
 
 Instructions: 
