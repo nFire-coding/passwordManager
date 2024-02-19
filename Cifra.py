@@ -6,7 +6,6 @@ from getpass import getpass
 
 from time import sleep
 from PyInquirer import prompt, style_from_dict, Token
-from colorama import Fore, init
 from cryptography.fernet import Fernet
 
 style = style_from_dict({
@@ -80,15 +79,17 @@ def add_password(passwords, key):
     home()
 
 def view_password(passwords, service_name):
+    clear()
     for service, username, password in passwords:
         if service == service_name:
             print(f"Servizio: {service}")
             print(f"Username: {username}")
             print(f"Password: {password}")
             break
-    print("\n\nPremi invio per tornare alla home")
+    print('\n')
     resp = prompt(back, style=style)
     do(resp['operation'])
+    
 
 def list_services(passwords):
     if not passwords:
@@ -99,22 +100,36 @@ def list_services(passwords):
         print("Elenco dei servizi salvati:")
         for service, _, _ in passwords:
             print(service)
-        print("\n\nPremi invio per tornare alla home")
+        print("\n")
         resp = prompt(back, style=style)
         do(resp['operation'])
 
-def get_services():
+def get_services(passwords):
     services = []
     for service, _, _ in passwords:
         services.append(service)
     return services
+
+def get_passwords(passwords):
+    services = get_services(passwords)
+    services.append('Indietro')
+    pwlist = [
+    {
+        'type': 'list',
+        'name': 'operation',
+        'message': 'Scegli il servizio',
+        'choices': services
+    }
+]
+    resp = prompt(pwlist, style=style)
+    do(resp['operation'])
 
 
 back = [
     {
         'type': 'list',
         'name': 'operation',
-        'message': '',
+        'message': 'Premi invio per tornare alla home',
         'choices': [
             'Indietro',
         ]
@@ -147,10 +162,12 @@ choice = [
     }
 ]
 
-services = get_services()
+global services, passwords, stato
+services = []
+stato = ""
 
 def do(operation):
-    global passwords, key
+    global passwords, key, services, stato
     
     if operation == "Si":
         clear()
@@ -171,7 +188,8 @@ def do(operation):
         add_password(passwords, key)
     elif operation == "Visualizza la password di un servizio":
         clear()
-        view_password(passwords, key)
+        stato = "view"
+        get_passwords(passwords)
     elif operation == "Visualizza la lista dei servizi salvati":
         clear()
         list_services(passwords)
@@ -181,9 +199,11 @@ def do(operation):
         sleep(1.5)
         sys.exit(0)
     elif operation == "Indietro":
+        stato = ""
         home()
-    elif operation in services:
+    elif operation in services and stato == "view":
         view_password(passwords, operation)
+        stato = ""
 
     
 def start():
@@ -192,6 +212,8 @@ def start():
     do(resp['operation'])
 
 def home():
+    global services, passwords
+    services = get_services(passwords)
     clear()
     resp = prompt(choice, style=style)
     do(resp['operation'])

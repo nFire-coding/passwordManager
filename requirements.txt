@@ -1,4 +1,3 @@
 easygui
 PyInquirer
-colorama
 cryptography
