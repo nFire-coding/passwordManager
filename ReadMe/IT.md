@@ -1,13 +1,30 @@
-# passwordManager
-Un semplice gestore di password in grado di memorizzare le vostre password
+# Semplice gestore di password
 
-Istruzioni:
+Un semplice gestore di password in grado di memorizzare in modo sicuro le vostre password.
 
--Installare Python dal [sito ufficiale](https://www.python.org/downloads/) (ultima versione) e dare accesso al percorso e alle variabili d'ambiente.
+## Istruzioni
 
--Lanciare il comando ```pip install -r requirements.txt``` sul terminale nella cartella del programma per installare le librerie necessarie.
+### Prerequisiti
+- Installa python dal [sito ufficiale](https://www.python.org/) (ultima versione) e assicurati che sia stato aggiunto alla Path di sistema e alle variabili d'ambiente.
 
--Aprire una finestra powershell nella cartella degli script e lanciarla con ```python Cifra.py```.
+### Installazione
+1. Apri un terminale o un prompt di comando powershell.
+2. Lancia il seguente comando per installare le librerie necessarie:
+    ```
+    pip install -r requirements.txt
+    ```
 
+### Utilizzo
+1. Naviga nella cartella del programma nel terminale o prompt di comando powershell.
+2. Lancia lo script con python eseguendo:
+    ```
+    python Cifra.py
+    ```
 
-NB: Fate attenzione a far generare al programma più di una chiave segreta. Per impostazione predefinita, viene generata nella cartella corrente, quindi se si lascia la vecchia chiave nella cartella corrente e se ne fa generare una seconda, questa verrà sovrascritta. Il programma è stato realizzato solo per uso didattico e può essere migliorato liberamente da chiunque (per esempio, non c'è alcuna funzionalità per modificare le password già salvate).
+## Note
+- **Attenzione**: Evita di generare più di una chiave segreta. Per impostazione predefinita, viene generata nella cartella corrente. Se si genera una nuova chiave senza rimuovere la vecchia, questa verrà sovrascritta.
+- Questo programma è destinato esclusivamente all'uso didattico.
+- Sentiti libero di contribuire e migliorare il programma. Ad esempio, attualmente non esiste una funzionalità per modificare le password già salvate.
+
+## Compatibilità
+- Questo programma è compatibile con Windows, macOS, e sistemi operativi GNU/Linux.
