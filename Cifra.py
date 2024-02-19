@@ -2,8 +2,8 @@ import os
 import pickle
 import easygui
 import sys
-from getpass import getpass
 
+from getpass import getpass
 from time import sleep
 from PyInquirer import prompt, style_from_dict, Token
 from cryptography.fernet import Fernet
@@ -52,7 +52,7 @@ def save_passwords(passwords, key):
             encrypted_service = encrypt_password(service, key)
             encrypted_username = encrypt_password(username, key)
             encrypted_password = encrypt_password(password, key)
-            encrypted_data.append((encrypted_service, encrypted_username, encrypted_password))
+            encrypted_data.append([encrypted_service, encrypted_username, encrypted_password])
         pickle.dump(encrypted_data, password_file)
 
 def load_passwords(key):
@@ -64,7 +64,7 @@ def load_passwords(key):
                 service = decrypt_password(encrypted_service, key)
                 username = decrypt_password(encrypted_username, key)
                 password = decrypt_password(encrypted_password, key)
-                passwords.append((service, username, password))
+                passwords.append([service, username, password])
     return passwords
 
 def add_password(passwords, key):
@@ -72,7 +72,7 @@ def add_password(passwords, key):
     username = input("Inserisci il nome utente: ")
     password = getpass("Inserisci la password: ") # nasconde la password
 
-    passwords.append((service, username, password))
+    passwords.append([service, username, password])
     save_passwords(passwords, key)
     print("Password salvata con successo!")
     sleep(2)
@@ -97,11 +97,17 @@ def list_services(passwords):
         sleep(2)
         home()
     else:
-        print("Elenco dei servizi salvati:")
-        for service, _, _ in passwords:
-            print(service)
-        print("\n")
-        resp = prompt(back, style=style)
+        services = get_services(passwords)
+        services.append('Indietro')
+        serviceslist = [
+            {
+                'type': 'list',
+                'name': 'operation',
+                'message': 'Elenco dei servizi salvati (Seleziona per modificare)',
+                'choices': services,
+            }
+        ]
+        resp = prompt(serviceslist, style=style)
         do(resp['operation'])
 
 def get_services(passwords):
@@ -123,6 +129,88 @@ def get_passwords(passwords):
 ]
     resp = prompt(pwlist, style=style)
     do(resp['operation'])
+
+global stato
+stato = ""
+
+def edit_name(passwords, key, service, new_name):
+    i = 0
+    for name, _, _ in passwords:
+        i += 1
+        if name == service:
+            passwords[i-1][0] = new_name
+            save_passwords(passwords, key)
+            break
+    print(f"Nome del servizio {service} modificato correttamente in {new_name}!")
+    sleep(3)
+    home()
+
+def edit_username(passwords, key, service, new_username):
+    i = 0
+    for name, _, _ in passwords:
+        i += 1
+        if name == service:
+            passwords[i-1][1] = new_username
+            save_passwords(passwords, key)
+            break
+    print(f"Username del servizio {service} modificato correttamente in {new_username}!")
+    sleep(3)
+    home()
+
+def edit_pass(passwords, key, service, new_password):
+    i = 0
+    for name, _, _ in passwords:
+        i += 1
+        if name == service:
+            passwords[i-1][2] = new_password
+            save_passwords(passwords, key)
+            break
+    pw = ""
+    i = 0
+    l = len(new_password)
+    for char in new_password:
+        i += 1
+        if i == 1:
+            pw += char
+        elif i == l:
+            pw += char
+        else:
+            pw += "*"
+    print(f"Password del servizio {service} modificata correttamente in {pw}!")
+    sleep(3)
+    home()
+
+def del_service(passwords, key, service):
+    i = 0
+    for name, _, _ in passwords:
+        i += 1
+        if name == service:
+            del passwords[i-1]
+            save_passwords(passwords, key)
+            break
+    print(f"Servizio {service} eliminato correttamente!")
+    sleep(3)
+    home()
+
+def edit_service(service):
+    global stato
+    actions = [
+        {
+            'type': 'list',
+            'name': 'operation',
+            'message': 'Scegli l\'operazione da eseguire',
+            'choices': [
+                'Modifica nome servizio',
+                'Modifica nome utente',
+                'Modifica password',
+                'Elimina',
+                'Indietro',
+            ]
+        }
+    ]
+    resp = prompt(actions, style=style)
+    do(resp['operation'])
+    stato = service
 
 
 back = [
@@ -156,15 +244,13 @@ choice = [
         'choices': [
             'Aggiungi nuovo servizio, username e password',
             'Visualizza la password di un servizio',
-            'Visualizza la lista dei servizi salvati',
+            'Visualizza la lista dei servizi salvati o modificali',
             'Esci',
         ]
     }
 ]
-
-global services, passwords, stato
+global services, passwords
 services = []
-stato = ""
 
 def do(operation):
     global passwords, key, services, stato
@@ -190,8 +276,9 @@ def do(operation):
         clear()
         stato = "view"
         get_passwords(passwords)
-    elif operation == "Visualizza la lista dei servizi salvati":
+    elif operation == "Visualizza la lista dei servizi salvati o modificali":
         clear()
+        stato = "edit"
         list_services(passwords)
     elif operation == "Esci":
         clear()
@@ -203,6 +290,25 @@ def do(operation):
         home()
     elif operation in services and stato == "view":
         view_password(passwords, operation)
+        stato = ""
+    elif operation in services and stato == "edit":
+        clear()
+        stato = operation
+        edit_service(operation)
+    elif operation == "Modifica nome servizio":
+        new = input("Inserisci il nuovo nome da dare al servizio: ")
+        edit_name(passwords, key, stato, new)
+        stato = ""
+    elif operation == "Modifica nome utente":
+        new = input(f"Inserisci il nuovo nome utente del servizio {stato}: ")
+        edit_username(passwords, key, stato, new)
+        stato = ""
+    elif operation == "Modifica password":
+        new = input(f"Inserisci la nuove password del servizio {stato}: ")
+        edit_pass(passwords, key, stato, new)
+        stato = ""
+    elif operation == "Elimina":
+        del_service(passwords, key, stato)
         stato = ""
 
     
