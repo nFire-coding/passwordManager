@@ -73,6 +73,9 @@ def view_password(passwords, key):
     if not found:
         print(Fore.RED + f"Password per il servizio '{service_name}' non trovata.")
 
+    # Attendi l'invio prima di tornare al menu
+    input("Premi Invio per tornare al menu principale...")
+
 def change_password(passwords, key):
     service_name = input("Inserisci il nome del servizio per cambiare la password: ")
     found = False
@@ -93,7 +96,7 @@ def list_services(passwords):
     else:
         print(Fore.YELLOW + "Elenco dei servizi salvati:")
         for service, _, _ in passwords:
-            print(service)
+            print(Fore.LIGHTGREEN_EX + f"{service}")
 
 def main():
     choice = input("Hai già una chiave segreta? (Sì/No): ").strip().upper()
@@ -131,7 +134,8 @@ def main():
         generate_key()
         key = load_key()
     else:
-        return
+        print(Fore.RED + f"Opzione non valida.")
+        main()
 
     passwords = load_passwords(key)
 
