@@ -2,6 +2,9 @@ import os
 import pickle
 from cryptography.fernet import Fernet
 from tkinter import filedialog, Tk
+from colorama import init, Fore, Style
+
+init(autoreset=True)
 
 def generate_key():
     key = Fernet.generate_key()
@@ -55,61 +58,109 @@ def add_password(passwords, key):
 
     passwords.append((service, username, password))
     save_passwords(passwords, key)
-    print("Password salvata con successo!")
+    print(Fore.GREEN + "Password salvata con successo!")
 
 def view_password(passwords, key):
     service_name = input("Inserisci il nome del servizio per visualizzare la password: ")
     found = False
-    for service, username, password in passwords:
+    for i, (service, username, password) in enumerate(passwords):
         if service == service_name:
-            print(f"Servizio: {service}")
-            print(f"Username: {username}")
-            print(f"Password: {password}")
+            print(Fore.YELLOW + f"\nServizio: {service}")
+            print(Fore.YELLOW + f"Username: {username}")
+            print(Fore.YELLOW + f"Password: {password}")
             found = True
             break
     if not found:
-        print(f"Password per il servizio '{service_name}' non trovata.")
+        print(Fore.RED + f"Password per il servizio '{service_name}' non trovata.")
+
+    # Attendi l'invio prima di tornare al menu
+    input("Premi Invio per tornare al menu principale...")
+
+def change_password(passwords, key):
+    service_name = input("Inserisci il nome del servizio per cambiare la password: ")
+    found = False
+    for i, (service, username, password) in enumerate(passwords):
+        if service == service_name:
+            new_password = input("Inserisci la nuova password: ")
+            passwords[i] = (service, username, new_password)
+            save_passwords(passwords, key)
+            print(Fore.GREEN + "Password cambiata con successo!")
+            found = True
+            break
+    if not found:
+        print(Fore.RED + f"Password per il servizio '{service_name}' non trovata.")
 
 def list_services(passwords):
     if not passwords:
-        print("Nessun servizio salvato.")
+        print(Fore.YELLOW + "Nessun servizio salvato.")
     else:
-        print("Elenco dei servizi salvati:")
+        print(Fore.YELLOW + "Elenco dei servizi salvati:")
         for service, _, _ in passwords:
-            print(service)
+            print(Fore.LIGHTGREEN_EX + f"{service}")
 
 def main():
-    choice = input("Hai già una chiave segreta? (SI/NO): ").strip().upper()
+    choice = input("Hai già una chiave segreta? (Sì/No): ").strip().upper()
     if choice == "SI":
         key = load_key()
+    elif choice == "Si":
+        key = load_key()
+    elif choice == "Sì":
+        key = load_key()
+    elif choice == "si":
+        key = load_key()
+    elif choice == "sì":
+        key = load_key()
+    elif choice == "SÌ":
+        key = load_key()
+    elif choice == "sÌ":
+        key = load_key()
+    elif choice == "sI":
+        key = load_key()
+    elif choice == "no":
+        print(Fore.CYAN + "\nGenerata nella cartella corrente la tua chiave segreta (secret.key). NASCONDILA E CONSERVALA, serve a recuperare le tue password!")
+        generate_key()
+        key = load_key()
+    elif choice == "nO":
+        print(Fore.CYAN + "\nGenerata nella cartella corrente la tua chiave segreta (secret.key). NASCONDILA E CONSERVALA, serve a recuperare le tue password!")
+        generate_key()
+        key = load_key()
+    elif choice == "No":
+        print(Fore.CYAN + "\nGenerata nella cartella corrente la tua chiave segreta (secret.key). NASCONDILA E CONSERVALA, serve a recuperare le tue password!")
+        generate_key()
+        key = load_key()
+
     elif choice == "NO":
-        print("Generata nella cartella corrente la tua chiave segreta (secret.key). NASCONDILA E CONSERVALA, serve a recuperare le tue password!")
+        print(Fore.CYAN + "\nGenerata nella cartella corrente la tua chiave segreta (secret.key). NASCONDILA E CONSERVALA, serve a recuperare le tue password!")
         generate_key()
         key = load_key()
     else:
-        return
+        print(Fore.RED + f"Opzione non valida.")
+        main()
 
     passwords = load_passwords(key)
 
     while True:
-        print("\nMenu:")
+        print(Fore.CYAN + f"\nMenu:")
         print("1. Aggiungi nuovo servizio, username e password")
         print("2. Visualizza la password di un servizio")
-        print("3. Visualizza la lista dei servizi salvati")
-        print("4. Esci")
-        choice = input("Scegli un'opzione (1/2/3/4): ").strip()
+        print("3. Cambia la password di un servizio")
+        print("4. Visualizza la lista dei servizi salvati")
+        print("5. Esci")
+        choice = input("Scegli un'opzione (1/2/3/4/5): ").strip()
 
         if choice == "1":
             add_password(passwords, key)
         elif choice == "2":
             view_password(passwords, key)
         elif choice == "3":
-            list_services(passwords)
+            change_password(passwords, key)
         elif choice == "4":
-            print("Arrivederci!")
+            list_services(passwords)
+        elif choice == "5":
+            print(Fore.CYAN + "Arrivederci!")
             break
         else:
-            print("Scelta non valida. Si prega di rispondere con 1, 2, 3 o 4.")
+            print(Fore.RED + Fore.YELLOW + "Scelta non valida. Si prega di rispondere con 1, 2, 3, 4 o 5.")
 
 if __name__ == "__main__":
     main()
