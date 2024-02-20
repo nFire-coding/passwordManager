@@ -1,3 +1,2 @@
-easygui
-PyInquirer
 cryptography
+colorama

@@ -1,5 +1,7 @@
 # Semplice gestore di password
 
+![Python](https://img.shields.io/badge/-Python-black?style=flat-square&logo=Python)
+
 Un semplice gestore di password in grado di memorizzare in modo sicuro le vostre password.
 
 ## Istruzioni

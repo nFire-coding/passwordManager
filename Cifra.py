@@ -1,28 +1,10 @@
 import os
 import pickle
-import easygui
-import sys
-
-from getpass import getpass
-from time import sleep
-from PyInquirer import prompt, style_from_dict, Token
 from cryptography.fernet import Fernet
+from tkinter import filedialog, Tk
+from colorama import init, Fore, Style
 
-style = style_from_dict({
-Token.Separator: '',
-Token.QuestionMark: '#c675ff',
-Token.Selected: '#24fc03',
-Token.Pointer: '#24fc03',
-Token.Instruction: '#d9fc38 bold',
-Token.Answer: '#24fc03',
-Token.Question: '#c675ff',
-})
-
-def clear():
-    try:
-        os.system("cls")
-    except:
-        os.system("clear")
+init(autoreset=True)
 
 def generate_key():
     key = Fernet.generate_key()
@@ -30,7 +12,9 @@ def generate_key():
         key_file.write(key)
 
 def load_key():
-    file_path = easygui.fileopenbox(title='Seleziona il file chiave segreta', filetypes=['*.key'], default='*.key')
+    root = Tk()
+    root.withdraw()
+    file_path = filedialog.askopenfilename(title="Seleziona il file chiave segreta")
     with open(file_path, "rb") as key_file:
         key = key_file.read()
     return key
@@ -52,7 +36,7 @@ def save_passwords(passwords, key):
             encrypted_service = encrypt_password(service, key)
             encrypted_username = encrypt_password(username, key)
             encrypted_password = encrypt_password(password, key)
-            encrypted_data.append([encrypted_service, encrypted_username, encrypted_password])
+            encrypted_data.append((encrypted_service, encrypted_username, encrypted_password))
         pickle.dump(encrypted_data, password_file)
 
 def load_passwords(key):
@@ -64,265 +48,119 @@ def load_passwords(key):
                 service = decrypt_password(encrypted_service, key)
                 username = decrypt_password(encrypted_username, key)
                 password = decrypt_password(encrypted_password, key)
-                passwords.append([service, username, password])
+                passwords.append((service, username, password))
     return passwords
 
 def add_password(passwords, key):
     service = input("Inserisci il nome del servizio: ")
     username = input("Inserisci il nome utente: ")
-    password = getpass("Inserisci la password: ") # nasconde la password
+    password = input("Inserisci la password: ")
 
-    passwords.append([service, username, password])
+    passwords.append((service, username, password))
     save_passwords(passwords, key)
-    print("Password salvata con successo!")
-    sleep(2)
-    home()
+    print(Fore.GREEN + "Password salvata con successo!")
 
-def view_password(passwords, service_name):
-    clear()
-    for service, username, password in passwords:
+def view_password(passwords, key):
+    service_name = input("Inserisci il nome del servizio per visualizzare la password: ")
+    found = False
+    for i, (service, username, password) in enumerate(passwords):
         if service == service_name:
-            print(f"Servizio: {service}")
-            print(f"Username: {username}")
-            print(f"Password: {password}")
+            print(Fore.YELLOW + f"\nServizio: {service}")
+            print(Fore.YELLOW + f"Username: {username}")
+            print(Fore.YELLOW + f"Password: {password}")
+            found = True
             break
-    print('\n')
-    resp = prompt(back, style=style)
-    do(resp['operation'])
-    
+    if not found:
+        print(Fore.RED + f"Password per il servizio '{service_name}' non trovata.")
+
+    # Attendi l'invio prima di tornare al menu
+    input("Premi Invio per tornare al menu principale...")
+
+def change_password(passwords, key):
+    service_name = input("Inserisci il nome del servizio per cambiare la password: ")
+    found = False
+    for i, (service, username, password) in enumerate(passwords):
+        if service == service_name:
+            new_password = input("Inserisci la nuova password: ")
+            passwords[i] = (service, username, new_password)
+            save_passwords(passwords, key)
+            print(Fore.GREEN + "Password cambiata con successo!")
+            found = True
+            break
+    if not found:
+        print(Fore.RED + f"Password per il servizio '{service_name}' non trovata.")
 
 def list_services(passwords):
     if not passwords:
-        print("Nessun servizio salvato.")
-        sleep(2)
-        home()
+        print(Fore.YELLOW + "Nessun servizio salvato.")
     else:
-        services = get_services(passwords)
-        services.append('Indietro')
-        serviceslist = [
-            {
-                'type': 'list',
-                'name': 'operation',
-                'message': 'Elenco dei servizi salvati (Seleziona per modificare)',
-                'choices': services,
-            }
-        ]
-        resp = prompt(serviceslist, style=style)
-        do(resp['operation'])
+        print(Fore.YELLOW + "Elenco dei servizi salvati:")
+        for service, _, _ in passwords:
+            print(Fore.LIGHTGREEN_EX + f"{service}")
 
-def get_services(passwords):
-    services = []
-    for service, _, _ in passwords:
-        services.append(service)
-    return services
-
-def get_passwords(passwords):
-    services = get_services(passwords)
-    services.append('Indietro')
-    pwlist = [
-    {
-        'type': 'list',
-        'name': 'operation',
-        'message': 'Scegli il servizio',
-        'choices': services
-    }
-]
-    resp = prompt(pwlist, style=style)
-    do(resp['operation'])
-
-global stato
-stato = ""
-
-def edit_name(passwords, key, service, new_name):
-    i = 0
-    for name, _, _ in passwords:
-        i += 1
-        if name == service:
-            passwords[i-1][0] = new_name
-            save_passwords(passwords, key)
-            break
-    print(f"Nome del servizio {service} modificato correttamente in {new_name}!")
-    sleep(3)
-    home()
-
-def edit_username(passwords, key, service, new_username):
-    i = 0
-    for name, _, _ in passwords:
-        i += 1
-        if name == service:
-            passwords[i-1][1] = new_username
-            save_passwords(passwords, key)
-            break
-    print(f"Username del servizio {service} modificato correttamente in {new_username}!")
-    sleep(3)
-    home()
-
-def edit_pass(passwords, key, service, new_password):
-    i = 0
-    for name, _, _ in passwords:
-        i += 1
-        if name == service:
-            passwords[i-1][2] = new_password
-            save_passwords(passwords, key)
-            break
-    pw = ""
-    i = 0
-    l = len(new_password)
-    for char in new_password:
-        i += 1
-        if i == 1:
-            pw += char
-        elif i == l:
-            pw += char
-        else:
-            pw += "*"
-    print(f"Password del servizio {service} modificata correttamente in {pw}!")
-    sleep(3)
-    home()
-
-def del_service(passwords, key, service):
-    i = 0
-    for name, _, _ in passwords:
-        i += 1
-        if name == service:
-            del passwords[i-1]
-            save_passwords(passwords, key)
-            break
-    print(f"Servizio {service} eliminato correttamente!")
-    sleep(3)
-    home()
-
-def edit_service(service):
-    global stato
-    actions = [
-        {
-            'type': 'list',
-            'name': 'operation',
-            'message': 'Scegli l\'operazione da eseguire',
-            'choices': [
-                'Modifica nome servizio',
-                'Modifica nome utente',
-                'Modifica password',
-                'Elimina',
-                'Indietro',
-            ]
-        }
-    ]
-    resp = prompt(actions, style=style)
-    do(resp['operation'])
-    stato = service
-
-
-back = [
-    {
-        'type': 'list',
-        'name': 'operation',
-        'message': 'Premi invio per tornare alla home',
-        'choices': [
-            'Indietro',
-        ]
-    }
-]
-
-choiceKey = [
-    {
-        'type': 'list',
-        'name': 'operation',
-        'message': 'Hai già una chiave segreta?',
-        'choices': [
-            'Si',
-            'No',
-        ]
-    }
-]
-
-choice = [
-    {
-        'type': 'list',
-        'name': 'operation',
-        'message': 'Menu',
-        'choices': [
-            'Aggiungi nuovo servizio, username e password',
-            'Visualizza la password di un servizio',
-            'Visualizza la lista dei servizi salvati o modificali',
-            'Esci',
-        ]
-    }
-]
-global services, passwords
-services = []
-
-def do(operation):
-    global passwords, key, services, stato
-    
-    if operation == "Si":
-        clear()
+def main():
+    choice = input("Hai già una chiave segreta? (Sì/No): ").strip().upper()
+    if choice == "SI":
         key = load_key()
-        passwords = load_passwords(key)
-        home()
-    elif operation == "No":
-        clear()
+    elif choice == "Si":
+        key = load_key()
+    elif choice == "Sì":
+        key = load_key()
+    elif choice == "si":
+        key = load_key()
+    elif choice == "sì":
+        key = load_key()
+    elif choice == "SÌ":
+        key = load_key()
+    elif choice == "sÌ":
+        key = load_key()
+    elif choice == "sI":
+        key = load_key()
+    elif choice == "no":
+        print(Fore.CYAN + "\nGenerata nella cartella corrente la tua chiave segreta (secret.key). NASCONDILA E CONSERVALA, serve a recuperare le tue password!")
         generate_key()
-        print("Generata nella cartella corrente la tua chiave segreta (secret.key). NASCONDILA E CONSERVALA, serve a recuperare le tue password!")
-        sleep(2)
-        clear() 
         key = load_key()
-        passwords = load_passwords(key)
-        home()
-    elif operation == "Aggiungi nuovo servizio, username e password":
-        clear()
-        add_password(passwords, key)
-    elif operation == "Visualizza la password di un servizio":
-        clear()
-        stato = "view"
-        get_passwords(passwords)
-    elif operation == "Visualizza la lista dei servizi salvati o modificali":
-        clear()
-        stato = "edit"
-        list_services(passwords)
-    elif operation == "Esci":
-        clear()
-        print("Arrivederci!")
-        sleep(1.5)
-        sys.exit(0)
-    elif operation == "Indietro":
-        stato = ""
-        home()
-    elif operation in services and stato == "view":
-        view_password(passwords, operation)
-        stato = ""
-    elif operation in services and stato == "edit":
-        clear()
-        stato = operation
-        edit_service(operation)
-    elif operation == "Modifica nome servizio":
-        new = input("Inserisci il nuovo nome da dare al servizio: ")
-        edit_name(passwords, key, stato, new)
-        stato = ""
-    elif operation == "Modifica nome utente":
-        new = input(f"Inserisci il nuovo nome utente del servizio {stato}: ")
-        edit_username(passwords, key, stato, new)
-        stato = ""
-    elif operation == "Modifica password":
-        new = input(f"Inserisci la nuove password del servizio {stato}: ")
-        edit_pass(passwords, key, stato, new)
-        stato = ""
-    elif operation == "Elimina":
-        del_service(passwords, key, stato)
-        stato = ""
+    elif choice == "nO":
+        print(Fore.CYAN + "\nGenerata nella cartella corrente la tua chiave segreta (secret.key). NASCONDILA E CONSERVALA, serve a recuperare le tue password!")
+        generate_key()
+        key = load_key()
+    elif choice == "No":
+        print(Fore.CYAN + "\nGenerata nella cartella corrente la tua chiave segreta (secret.key). NASCONDILA E CONSERVALA, serve a recuperare le tue password!")
+        generate_key()
+        key = load_key()
 
-    
-def start():
-    clear()
-    resp = prompt(choiceKey, style=style)
-    do(resp['operation'])
+    elif choice == "NO":
+        print(Fore.CYAN + "\nGenerata nella cartella corrente la tua chiave segreta (secret.key). NASCONDILA E CONSERVALA, serve a recuperare le tue password!")
+        generate_key()
+        key = load_key()
+    else:
+        print(Fore.RED + f"Opzione non valida.")
+        main()
 
-def home():
-    global services, passwords
-    services = get_services(passwords)
-    clear()
-    resp = prompt(choice, style=style)
-    do(resp['operation'])
+    passwords = load_passwords(key)
+
+    while True:
+        print(Fore.CYAN + f"\nMenu:")
+        print("1. Aggiungi nuovo servizio, username e password")
+        print("2. Visualizza la password di un servizio")
+        print("3. Cambia la password di un servizio")
+        print("4. Visualizza la lista dei servizi salvati")
+        print("5. Esci")
+        choice = input("Scegli un'opzione (1/2/3/4/5): ").strip()
+
+        if choice == "1":
+            add_password(passwords, key)
+        elif choice == "2":
+            view_password(passwords, key)
+        elif choice == "3":
+            change_password(passwords, key)
+        elif choice == "4":
+            list_services(passwords)
+        elif choice == "5":
+            print(Fore.CYAN + "Arrivederci!")
+            break
+        else:
+            print(Fore.RED + Fore.YELLOW + "Scelta non valida. Si prega di rispondere con 1, 2, 3, 4 o 5.")
 
 if __name__ == "__main__":
-    start()
+    main()
