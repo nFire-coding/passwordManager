@@ -162,13 +162,7 @@ def main():
         key = load_key()
     elif choice == "sÌ":
         key = load_key()
-    elif choice == "sI":
-        key = load_key()
     elif choice == "no":
-        print(Fore.CYAN + "\nGenerata nella cartella corrente la tua chiave segreta (secret.key). NASCONDILA E CONSERVALA, serve a recuperare le tue password!")
-        generate_key()
-        key = load_key()
-    elif choice == "nO":
         print(Fore.CYAN + "\nGenerata nella cartella corrente la tua chiave segreta (secret.key). NASCONDILA E CONSERVALA, serve a recuperare le tue password!")
         generate_key()
         key = load_key()
@@ -189,13 +183,13 @@ def main():
 
     while True:
         print(Fore.CYAN + f"\nMenu:")
-        print(Fore.GREEN + Style.BRIGHT + "1. Aggiungi nuovo servizio, username e password")
-        print(Fore.YELLOW + Style.BRIGHT + "2. Visualizza la password di un servizio")
-        print(Fore.YELLOW + Style.BRIGHT + "3. Cambia la password di un servizio")
-        print(Fore.YELLOW + Style.BRIGHT + "4. Visualizza la lista dei servizi salvati")
-        print(Fore.RED + Style.BRIGHT + "5. Rimuovi servizio")
-        print(Fore.CYAN + Style.BRIGHT + "6. Esci")
-        choice = input("Scegli un'opzione (1/2/3/4/5/6): ").strip()
+        print(Style.BRIGHT + "1. Aggiungi nuovo servizio, username e password")
+        print(Style.BRIGHT + "2. Visualizza la password di un servizio")
+        print(Style.BRIGHT + "3. Cambia la password di un servizio")
+        print(Style.BRIGHT + "4. Visualizza la lista dei servizi salvati")
+        print(Style.BRIGHT + "5. Rimuovi servizio")
+        print(Style.BRIGHT + "6. Esci")
+        choice = input(Fore.CYAN + f"Scegli un'opzione (1/2/3/4/5/6): ").strip()
 
         if choice == "1":
             add_password(passwords, key)
