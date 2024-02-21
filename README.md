@@ -4,7 +4,8 @@
 
 A simple password manager capable of securely storing your passwords. 🗝️
 
-## 📝 Instructions
+## 📝 Instructions  - Run with Python 
+![##📝 Instructions  - Run with Python](https://img.shields.io/badge/-Python-black?style=flat-square&logo=Python)
 
 ### 📚 Prerequisites
 - Install Python from the [official website](https://www.python.org/) (latest version) and ensure it is added to the system Path and environment variables.
@@ -22,6 +23,24 @@ A simple password manager capable of securely storing your passwords. 🗝️
     ```
     python Cifra.py
     ```
+    
+## 📝 Instructions - Run executable
+1. Download the appropriate release (check system and architecture).
+2. Navigate to the directory where you downloaded the release using "cd".
+    ```
+    cd /your_directory/
+    ```
+3. Unzip the file (you can do this visually or from the command line).
+    ```
+    unzip <filename>
+    ```
+4. Run the executable.
+    ```
+    ./Cifra.dist/Executable_file
+    ```
+Make sure to replace <filename> and <Executable_file> with the correct values.
+
+
 
 ## 📌 Notes
 - **Caution**: Avoid generating more than one secret key. By default, it is generated in the current folder. If you generate a new key without removing the old one, it will be overwritten. ⚠️
