@@ -90,6 +90,54 @@ def change_password(passwords, key):
     if not found:
         print(Fore.RED + f"Password per il servizio '{service_name}' non trovata.")
 
+def delete_service(passwords, key):
+
+    service_name = input(Fore.LIGHTGREEN_EX + "Inserisci il nome del servizio da eliminare: ")
+    confirmation = input(Fore.RED + Style.BRIGHT + "Ne sei veramente sicuro? Una volta eliminato un servizio non potrà più essere recuperato. (Sì/No): ").strip().upper()
+    if confirmation == "SI":
+        updated_passwords = [(service, username, password) for service, username, password in passwords if service != service_name]
+        if len(updated_passwords) < len(passwords):
+            save_passwords(updated_passwords, key)
+            print(Fore.GREEN + f"Il servizio '{service_name}' è stato eliminato con successo!")
+        else:
+            print(Fore.RED + f"Password per il servizio '{service_name}' non trovata.")
+    elif confirmation == "Si":
+        updated_passwords = [(service, username, password) for service, username, password in passwords if service != service_name]
+        if len(updated_passwords) < len(passwords):
+            save_passwords(updated_passwords, key)
+            print(Fore.GREEN + f"Il servizio '{service_name}' è stato eliminato con successo!")
+        else:
+            print(Fore.RED + f"Password per il servizio '{service_name}' non trovata.")
+    elif confirmation == "si":
+        updated_passwords = [(service, username, password) for service, username, password in passwords if service != service_name]
+        if len(updated_passwords) < len(passwords):
+            save_passwords(updated_passwords, key)
+            print(Fore.GREEN + f"Il servizio '{service_name}' è stato eliminato con successo!")
+        else:
+            print(Fore.RED + f"Password per il servizio '{service_name}' non trovata.")
+    elif confirmation == "Sì":
+        updated_passwords = [(service, username, password) for service, username, password in passwords if service != service_name]
+        if len(updated_passwords) < len(passwords):
+            save_passwords(updated_passwords, key)
+            print(Fore.GREEN + Style.RESET_ALL + f"Il servizio '{service_name}' è stato eliminato con successo!")
+        else:
+            print(Fore.RED + f"Password per il servizio '{service_name}' non trovata.")
+    elif confirmation == "sì":
+        updated_passwords = [(service, username, password) for service, username, password in passwords if service != service_name]
+        if len(updated_passwords) < len(passwords):
+            save_passwords(updated_passwords, key)
+            print(Fore.GREEN + f"Il servizio '{service_name}' è stato eliminato con successo!")
+        else:
+            print(Fore.RED + f"Password per il servizio '{service_name}' non trovata.")
+    elif confirmation == "NO":
+        print(Fore.YELLOW + "Operazione di eliminazione annullata.")
+    elif confirmation == "No":
+        print(Fore.YELLOW + "Operazione di eliminazione annullata.")
+    elif confirmation == "no":
+        print(Fore.YELLOW + "Operazione di eliminazione annullata.")
+    else:
+        print(Fore.RED + "Opzione non valida. Operazione di eliminazione annullata.")
+
 def list_services(passwords):
     if not passwords:
         print(Fore.YELLOW + "Nessun servizio salvato.")
@@ -114,13 +162,7 @@ def main():
         key = load_key()
     elif choice == "sÌ":
         key = load_key()
-    elif choice == "sI":
-        key = load_key()
     elif choice == "no":
-        print(Fore.CYAN + "\nGenerata nella cartella corrente la tua chiave segreta (secret.key). NASCONDILA E CONSERVALA, serve a recuperare le tue password!")
-        generate_key()
-        key = load_key()
-    elif choice == "nO":
         print(Fore.CYAN + "\nGenerata nella cartella corrente la tua chiave segreta (secret.key). NASCONDILA E CONSERVALA, serve a recuperare le tue password!")
         generate_key()
         key = load_key()
@@ -141,12 +183,13 @@ def main():
 
     while True:
         print(Fore.CYAN + f"\nMenu:")
-        print("1. Aggiungi nuovo servizio, username e password")
-        print("2. Visualizza la password di un servizio")
-        print("3. Cambia la password di un servizio")
-        print("4. Visualizza la lista dei servizi salvati")
-        print("5. Esci")
-        choice = input("Scegli un'opzione (1/2/3/4/5): ").strip()
+        print(Style.BRIGHT + "1. Aggiungi nuovo servizio, username e password")
+        print(Style.BRIGHT + "2. Visualizza la password di un servizio")
+        print(Style.BRIGHT + "3. Cambia la password di un servizio")
+        print(Style.BRIGHT + "4. Visualizza la lista dei servizi salvati")
+        print(Style.BRIGHT + "5. Rimuovi servizio")
+        print(Style.BRIGHT + "6. Esci")
+        choice = input(Fore.CYAN + f"Scegli un'opzione (1/2/3/4/5/6): ").strip()
 
         if choice == "1":
             add_password(passwords, key)
@@ -157,10 +200,12 @@ def main():
         elif choice == "4":
             list_services(passwords)
         elif choice == "5":
+            delete_service(passwords, key)
+        elif choice == "6":
             print(Fore.CYAN + "Arrivederci!")
             break
         else:
-            print(Fore.RED + Fore.YELLOW + "Scelta non valida. Si prega di rispondere con 1, 2, 3, 4 o 5.")
+            print(Fore.RED + Fore.YELLOW + "Scelta non valida. Si prega di rispondere con 1, 2, 3, 4, 5 o 6.")
 
 if __name__ == "__main__":
     main()
