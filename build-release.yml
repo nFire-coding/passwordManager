@@ -1,0 +1,46 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-release:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-11, macos-latest, ubuntu-20.04, ubuntu-latest]
+        architecture: [x64, arm64]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        if: startsWith(matrix.os, 'macos')
+        run: |
+          pip install -r requirements.txt
+
+      - name: Compile with Nuitka
+        if: startsWith(matrix.os, 'macos') || startsWith(matrix.os, 'ubuntu')
+        run: |
+          python3 -m nuitka --standalone --follow-imports --enable-plugin=tk-inter Cifra.py
+
+      - name: Create zip file
+        if: startsWith(matrix.os, 'macos') || startsWith(matrix.os, 'ubuntu')
+        run: |
+          mkdir -p dist
+          cp README.md dist/
+          zip -r output.zip Cifra.dist README.md
+
+      - name: Create release
+        if: startsWith(matrix.os, 'macos') || startsWith(matrix.os, 'ubuntu')
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: output.zip
+          tag_name: ${{ github.run_number }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release_name: ${{ matrix.os }}-${{ matrix.architecture }}-${{ github.run_number }}
