@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-11, macos-latest, ubuntu-20.04, ubuntu-latest]
+        os: [macos-11, macos-10.5, macos-12, macos-13, macos-latest, ubuntu-20.04, ubuntu-latest]
         architecture: [x64, arm64]
 
     steps:
