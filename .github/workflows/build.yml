@@ -1,0 +1,80 @@
+name: Build Password Manager
+
+on:
+  push:
+    paths:
+      - 'Cifra.py'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-10.15, macos-11.0, ubuntu-20.04, ubuntu-18.04, windows-2019]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies and build
+        run: |
+          pip install nuitka
+          pip install -r requirements.txt
+
+          if [[ "${{ matrix.os }}" == "macos-10.15" ]]; then
+            python3 -m nuitka --onefile --enable-plugin=tk-inter --follow-imports Cifra.py -o passwordManager
+          elif [[ "${{ matrix.os }}" == "macos-11.0" ]]; then
+            python3 -m nuitka --onefile --enable-plugin=tk-inter --follow-imports Cifra.py -o passwordManager
+          elif [[ "${{ matrix.os }}" == "ubuntu-20.04" ]]; then
+            if [[ "${{ matrix.arch }}" == "x64" ]]; then
+              python3 -m nuitka --onefile --enable-plugin=tk-inter --follow-imports Cifra.py -o passwordManager
+            elif [[ "${{ matrix.arch }}" == "x86" ]]; then
+              python3 -m nuitka --onefile --enable-plugin=tk-inter --follow-imports Cifra.py -o passwordManager
+            fi
+          elif [[ "${{ matrix.os }}" == "ubuntu-18.04" ]]; then
+            if [[ "${{ matrix.arch }}" == "x64" ]]; then
+              python3 -m nuitka --onefile --enable-plugin=tk-inter --follow-imports Cifra.py -o passwordManager
+            elif [[ "${{ matrix.arch }}" == "x86" ]]; then
+              python3 -m nuitka --onefile --enable-plugin=tk-inter --follow-imports Cifra.py -o passwordManager
+            fi
+          elif [[ "${{ matrix.os }}" == "windows-2019" ]]; then
+            python -m nuitka --onefile --enable-plugin=tk-inter --windows-icon-from-ico=icon.ico Cifra.py -o passwordManager.exe
+          fi
+
+      - name: Create release
+        run: |
+          version=$(python -c "import Cifra; print(Cifra.__version__)")
+          os_name=$(uname -s)
+          arch=$(uname -m)
+
+          if [[ "${{ matrix.os }}" == "macos-10.15" ]]; then
+            os="macOS_x64"
+          elif [[ "${{ matrix.os }}" == "macos-11.0" ]]; then
+            os="macOS_ARM64"
+          elif [[ "${{ matrix.os }}" == "ubuntu-20.04" ]]; then
+            if [[ "${{ matrix.arch }}" == "x64" ]]; then
+              os="GNU/Linux_x64"
+            elif [[ "${{ matrix.arch }}" == "x86" ]]; then
+              os="GNU/Linux_x86"
+            fi
+          elif [[ "${{ matrix.os }}" == "ubuntu-18.04" ]]; then
+            if [[ "${{ matrix.arch }}" == "x64" ]]; then
+              os="GNU/Linux_x64"
+            elif [[ "${{ matrix.arch }}" == "x86" ]]; then
+              os="GNU/Linux_x86"
+            fi
+          elif [[ "${{ matrix.os }}" == "windows-2019" ]]; then
+            os="win10_x64"
+          fi
+
+          mv passwordManager* "passwordManager_${os}_${version}"
+          zip -r "passwordManager_${os}_${version}.zip" "passwordManager_${os}_${version}" README.md
+          rm -rf "passwordManager_${os}_${version}"
+
+        if: success() && startsWith(github.ref, 'refs/tags/')
