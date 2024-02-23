@@ -61,7 +61,7 @@ def add_password(passwords, key):
     print(Fore.GREEN + "Password salvata con successo!")
 
 def view_password(passwords, key):
-    service_name = input("Inserisci il nome del servizio per visualizzare la password: ")
+    service_name = input("Inserisci il nome del servizio per visualizzare l'username e password: ")
     found = False
     for i, (service, username, password) in enumerate(passwords):
         if service == service_name:
@@ -90,6 +90,35 @@ def change_password(passwords, key):
     if not found:
         print(Fore.RED + f"Password per il servizio '{service_name}' non trovata.")
 
+def change_service(passwords, key):
+    service_name = input("Inserisci il nome del servizio per cambiare il nome del servizio: ")
+    found = False
+    for i, (service, username, password) in enumerate(passwords):
+        if service == service_name:
+            new_service = input("Inserisci il nuovo nome del servizio: ")
+            passwords[i] = (new_service, username, password)
+            save_passwords(passwords, key)
+            print(Fore.GREEN + "Nome servizio cambiato con successo!")
+            found = True
+            break
+    if not found:
+        print(Fore.RED + f"Password per il servizio '{service_name}' non trovata.")
+
+def change_username(passwords, key):
+    service_name = input("Inserisci nome del servizio per cambiare l'username: ")
+    found = False
+    for i, (service, username, password) in enumerate(passwords):
+        if service == service_name:
+            new_username = input("Inserisci il nuovo username al servizio: ")
+            passwords[i] = (service, new_username, password)
+            save_passwords(passwords, key)
+            print(Fore.GREEN + "Username cambiato con successo!")
+            found = True
+            break
+    if not found:
+        print(Fore.RED + f"Password per il servizio '{service_name}' non trovata.")
+
+
 def list_services(passwords):
     if not passwords:
         print(Fore.YELLOW + "Nessun servizio salvato.")
@@ -115,26 +144,33 @@ def main():
 
     while True:
         print(Fore.CYAN + f"\nMenu:")
-        print("1. Aggiungi nuovo servizio, username e password")
-        print("2. Visualizza la password di un servizio")
-        print("3. Cambia la password di un servizio")
-        print("4. Visualizza la lista dei servizi salvati")
-        print("5. Esci")
-        choice = input("Scegli un'opzione (1/2/3/4/5): ").strip()
+        print(Style.BRIGHT + "1. Aggiungi nuovo servizio, username e password")
+        print(Style.BRIGHT + "2. Visualizza la lista dei servizi salvati")
+        print(Style.BRIGHT + "3. Visualizza l'username e la password di un servizio")
+        print(Style.BRIGHT + "4. Cambia il nome di un servizio")
+        print(Style.BRIGHT + "5. Cambia l'username di un servizio")
+        print(Style.BRIGHT + "6. Cambia la password di un servizio")
+        print(Style.BRIGHT + "7. Esci")
+        choice = input("Scegli un'opzione (1/2/3/4/5/6/7): ").strip()
 
         if choice == "1":
             add_password(passwords, key)
         elif choice == "2":
-            view_password(passwords, key)
-        elif choice == "3":
-            change_password(passwords, key)
-        elif choice == "4":
             list_services(passwords)
+        elif choice == "3":
+            view_password(passwords, key)
+        elif choice == "4":
+            change_service(passwords, key)
         elif choice == "5":
+            change_username(passwords, key)
+        elif choice == "6":
+            change_password(passwords, key)
+        elif choice == "7":
             print(Fore.CYAN + "Arrivederci!")
             break
+            
         else:
-            print(Fore.RED + Fore.YELLOW + "Scelta non valida. Si prega di rispondere con 1, 2, 3, 4 o 5.")
+            print(Fore.RED + Fore.YELLOW + "Scelta non valida. Si prega di rispondere con 1, 2, 3, 4, 5, 6 o 7.")
 
 if __name__ == "__main__":
     main()
