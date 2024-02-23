@@ -143,7 +143,7 @@ def main():
         generate_key()
         key = load_key()
     else:
-        print(Fore.RED + f"Opzione non valida.")
+        print(Fore.RED + "Opzione non valida.")
         main()
 
     passwords = load_passwords(key)
