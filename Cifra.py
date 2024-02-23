@@ -136,9 +136,9 @@ def list_services(passwords):
 
 def main():
     choice = input("Hai già una chiave segreta? (Sì/No): ").strip().upper()
-    if choice in ["si", "sì", "s", "y", "yes", "SI"]:
+    if choice in ["si", "sì", "s", "y", "yes"]:
     key = load_key()
-    elif choice in ["n", "no", "NO"]:
+    elif choice in ["n", "no",]:
         print(Fore.CYAN + "\nGenerata nella cartella corrente la tua chiave segreta (secret.key). NASCONDILA E CONSERVALA, serve a recuperare le tue password!")
         generate_key()
         key = load_key()
