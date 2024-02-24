@@ -99,42 +99,16 @@ def list_services(passwords):
             print(Fore.LIGHTGREEN_EX + f"{service}")
 
 def main():
-    choice = input("Hai già una chiave segreta? (Sì/No): ").strip().upper()
-    if choice == "SI":
+    choice = input("Hai già una chiave segreta? (Sì/No): ").strip().lower()
+    
+    if choice in ["si", "sì", "s", "y", "yes"]:
         key = load_key()
-    elif choice == "Si":
-        key = load_key()
-    elif choice == "Sì":
-        key = load_key()
-    elif choice == "si":
-        key = load_key()
-    elif choice == "sì":
-        key = load_key()
-    elif choice == "SÌ":
-        key = load_key()
-    elif choice == "sÌ":
-        key = load_key()
-    elif choice == "sI":
-        key = load_key()
-    elif choice == "no":
-        print(Fore.CYAN + "\nGenerata nella cartella corrente la tua chiave segreta (secret.key). NASCONDILA E CONSERVALA, serve a recuperare le tue password!")
-        generate_key()
-        key = load_key()
-    elif choice == "nO":
-        print(Fore.CYAN + "\nGenerata nella cartella corrente la tua chiave segreta (secret.key). NASCONDILA E CONSERVALA, serve a recuperare le tue password!")
-        generate_key()
-        key = load_key()
-    elif choice == "No":
-        print(Fore.CYAN + "\nGenerata nella cartella corrente la tua chiave segreta (secret.key). NASCONDILA E CONSERVALA, serve a recuperare le tue password!")
-        generate_key()
-        key = load_key()
-
-    elif choice == "NO":
+    elif choice in ["n", "no"]:
         print(Fore.CYAN + "\nGenerata nella cartella corrente la tua chiave segreta (secret.key). NASCONDILA E CONSERVALA, serve a recuperare le tue password!")
         generate_key()
         key = load_key()
     else:
-        print(Fore.RED + f"Opzione non valida.")
+        print(Fore.RED + "Opzione non valida.")
         main()
 
     passwords = load_passwords(key)
