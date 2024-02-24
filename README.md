@@ -1,5 +1,7 @@
 # 🔒 Simple Password Manager 
 
+[Italian](/ReadMe/IT.md)
+
 ![Python](https://img.shields.io/badge/-Python-black?style=flat-square&logo=Python)
 
 A simple password manager capable of securely storing your passwords. 🗝️
