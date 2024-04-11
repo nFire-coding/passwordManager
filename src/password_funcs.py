@@ -1,4 +1,9 @@
-from src.imports import *
+import os
+import pickle
+from cryptography.fernet import Fernet
+from colorama import Fore
+
+PASSWORD_FILE = "../passwords.dat"
 
 
 def encrypt_password(password, key):
@@ -14,7 +19,7 @@ def decrypt_password(encrypted_password, key):
 
 
 def save_passwords(passwords, key):
-    with open("../passwords.dat", "wb") as password_file:
+    with open(PASSWORD_FILE, "wb") as password_file:
         encrypted_data = []
         for service, username, password in passwords:
             encrypted_service = encrypt_password(service, key)
@@ -26,8 +31,8 @@ def save_passwords(passwords, key):
 
 def load_passwords(key):
     passwords = []
-    if os.path.exists("../passwords.dat"):
-        with open("../passwords.dat", "rb") as password_file:
+    if os.path.exists(PASSWORD_FILE):
+        with open(PASSWORD_FILE, "rb") as password_file:
             encrypted_data = pickle.load(password_file)
             for encrypted_service, encrypted_username, encrypted_password in encrypted_data:
                 service = decrypt_password(encrypted_service, key)
@@ -49,15 +54,15 @@ def add_password(passwords, key):
 
 def view_password(passwords, key):
     service_name = input("\nInserisci il nome del servizio per visualizzare la password: ")
-    isFound = False
-    for i, (service, username, password) in enumerate(passwords):
+    is_found = False
+    for service, username, password in passwords:
         if service == service_name:
             print(Fore.YELLOW + f"\nServizio: {service}")
             print(Fore.YELLOW + f"Username: {username}")
             print(Fore.YELLOW + f"Password: {password}")
-            isFound = True
+            is_found = True
             break
-    if not isFound:
+    if not is_found:
         print(Fore.RED + f"\nPassword per il servizio '{service_name}' non trovata.")
 
     # Attendi l'invio prima di tornare al menu
@@ -67,14 +72,14 @@ def view_password(passwords, key):
 
 def change_password(passwords, key):
     service_name = input("\nInserisci il nome del servizio per cambiare la password: ")
-    isFound = False
+    is_found = False
     for i, (service, username, password) in enumerate(passwords):
         if service == service_name:
             new_password = input("\nInserisci la nuova password: ")
             passwords[i] = (service, username, new_password)
             save_passwords(passwords, key)
             print(Fore.GREEN + "\nPassword cambiata con successo!")
-            isFound = True
+            is_found = True
             break
-    if not isFound:
+    if not is_found:
         print(Fore.RED + f"\nPassword per il servizio '{service_name}' non trovata.")
