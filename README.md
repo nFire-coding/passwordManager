@@ -9,19 +9,38 @@ A simple password manager capable of securely storing your passwords. 🗝️
 ### 📚 Prerequisites
 - Install Python from the [official website](https://www.python.org/) (latest version) and ensure it is added to the system Path and environment variables.
 
-### 📥 Installation
+<details>
+<summary><b>Installation</b> - Click to expand</summary>
+
+#### Installation
 1. Open a terminal or powershell/command prompt. 🖥️
 2. Launch the following command to install the required dependencies:
     ```
     pip install -r requirements.txt
     ```
+</details>
 
-### 🚀 Usage
-1. Navigate to the script folder in the terminal or powershell/command prompt.
-2. Launch the script with Python by executing:
+<details>
+<summary><b>Python</b> - Click to expand</summary>
+
+#### Installation and Usage with Python
+- Follow the installation instructions above.
+- Navigate to the script folder in the terminal or powershell/command prompt.
+- Launch the script with Python by executing:
     ```
     python Cifra.py
     ```
+</details>
+
+<details>
+<summary><b>Eseguibile</b> - Click to expand</summary>
+
+#### Running with Python
+To execute the file "Executable.py" using Python, use the following command:
+    ```
+    python Executable.py
+    ```
+</details>
 
 ## 📌 Notes
 - **Caution**: Avoid generating more than one secret key. By default, it is generated in the current folder. If you generate a new key without removing the old one, it will be overwritten. ⚠️
