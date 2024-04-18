@@ -50,6 +50,19 @@ def remove_temporary_directories():
     else:
         execute_command("rm -rf passwordManager.dist passwordManager.build")
 
+def choicing():
+    choice = input("Vuoi mantenere l'ambiente virtuale [Y,n]? ").strip().lower()
+    if choice in ["si", "sì", "s", "y", "yes"]:
+        print("Rimozione dell'ambiente virtuale e delle directory temporanee di Nuitka…")
+        execute_command("rmdir /s /q venv" if platform.system() == 'Windows' else "rm -rf venv")
+        remove_temporary_directories()
+    elif choice in ["no", "n"]:
+        print("Rimozione delle directory temporanee di Nuitka...")
+        remove_temporary_directories()
+    else:
+        print("Rispondere con un Sì o un no")
+        choicing()
+
 def main():
     create_virtual_environment()
     upgrade_pip()
@@ -59,14 +72,7 @@ def main():
 
     print("La compilazione è stata completata.")
 
-    choice = input("Vuoi mantenere l'ambiente virtuale [Y,n]? ").strip().lower()
-    if choice == 'n':
-        print("Rimozione dell'ambiente virtuale e delle directory temporanee di Nuitka…")
-        execute_command("rmdir /s /q venv" if platform.system() == 'Windows' else "rm -rf venv")
-	remove_temporary_directories()
-    else:
-        print("Rimozione delle directory temporanee di Nuitka...")
-        remove_temporary_directories()
+    choicing()
 
     print("Per usare Password Manager puoi eseguire il file Python con 'python cifra.py' (vedi istruzioni nel file 'README.md' partendo dalla sezione 'Installazione'), oppure puoi eseguire il file eseguibile appena creato 'passwordManager' (l'estensione cambia in base al sistema usato).")
 
