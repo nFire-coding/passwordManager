@@ -33,7 +33,7 @@ A simple password manager capable of securely storing your passwords. 🗝️
 <summary><b>Executbale</b> - Click to expand</summary>
 
 #### Running natively with executable
-- To create the executable execute the file "Executable.py" using Python, use the following command:
+- To create the executable, use the following command:
     ```
     python Executable.py
     ```
