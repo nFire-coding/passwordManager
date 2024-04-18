@@ -61,7 +61,7 @@ def main():
 
     choice = input("Vuoi mantenere l'ambiente virtuale [Y,n]? ").strip().lower()
     if choice == 'n':
-        print("Rimozione dell'ambiente virtuale e delle directory temporanee di Nuitka…” )
+        print("Rimozione dell'ambiente virtuale e delle directory temporanee di Nuitka…")
         execute_command("rmdir /s /q venv" if platform.system() == 'Windows' else "rm -rf venv")
 	remove_temporary_directories()
     else:
