@@ -10,17 +10,6 @@ A simple password manager capable of securely storing your passwords. 🗝️
 - Install Python from the [official website](https://www.python.org/) (latest version) and ensure it is added to the system Path and environment variables.
 
 <details>
-<summary><b>Installation</b> - Click to expand</summary>
-
-#### Installation
-1. Open a terminal or powershell/command prompt. 🖥️
-2. Launch the following command to install the required dependencies:
-    ```
-    pip install -r requirements.txt
-    ```
-</details>
-
-<details>
 <summary><b>Python</b> - Click to expand</summary>
 
 #### Installation
@@ -39,10 +28,10 @@ A simple password manager capable of securely storing your passwords. 🗝️
 </details>
 
 <details>
-<summary><b>Eseguibile</b> - Click to expand</summary>
+<summary><b>EExecutbale</b> - Click to expand</summary>
 
-#### Running with Python
-To execute the file "Executable.py" using Python, use the following command:
+#### Running natively with executable
+To create the executable execute the file "Executable.py" using Python, use the following command:
     ```
     python Executable.py
     ```
