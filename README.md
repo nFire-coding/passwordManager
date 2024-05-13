@@ -2,7 +2,7 @@
 
 ![Python](https://img.shields.io/badge/-Python-black?style=flat-square&logo=Python)
 
-A simple password manager capable of securely storing your passwords. 🗝️
+A straightforward password manager designed to securely store your passwords. 🗝️
 
 ## 📝 Instructions
 
@@ -10,14 +10,14 @@ A simple password manager capable of securely storing your passwords. 🗝️
 - Install Python from the [official website](https://www.python.org/) (latest version) and ensure it is added to the system Path and environment variables.
 
 ### 📥 Installation
-1. Open a terminal or powershell/command prompt. 🖥️
-2. Launch the following command to install the required dependencies:
+1. Open a terminal, PowerShell, or command prompt. 🖥️
+2. Execute the following command to install the required dependencies:
     ```
     pip install -r requirements.txt
     ```
 
 ### 🚀 Usage
-1. Navigate to the script folder in the terminal or powershell/command prompt.
+1. Navigate to the script folder in the terminal, PowerShell, or command prompt.
 2. Launch the script with Python by executing:
     ```
     python Cifra.py
