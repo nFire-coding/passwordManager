@@ -30,7 +30,7 @@ A simple password manager capable of securely storing your passwords. 🗝️
 </details>
 
 <details>
-<summary><b>Executbale</b> - Click to expand</summary>
+<summary><b>Executable</b> - Click to expand</summary>
 
 #### Running natively with executable
 - To create the executable, use the following command:
